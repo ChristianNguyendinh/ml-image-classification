@@ -12,19 +12,19 @@ tf.compat.v1.enable_eager_execution()
 IMAGE_SIZE = 192
 NUM_IMAGES = 9
 TRAINING_IMAGE_PATH = 'images/training/'
+TESTING_IMAGE_PATH = 'images/testing/'
 
-label_mappings = { 'sana' : 0, 'nayeon' : 1, 'mina' : 2 }
+label_mappings = { 0 : 'sana', 1 : 'nayeon', 2 : 'mina' }
 
 image_labels = [ 2, 2, 2, 1, 1, 1, 0, 0, 0 ]
 
-filenames = tf.io.gfile.listdir(TRAINING_IMAGE_PATH)
-filenames.sort()
-
-print(filenames)
-
+def prepend_local_path(path):
+    def inner_prepend(file):
+        return path + file
+    return inner_prepend
 
 def preprocess(fname):
-    img = tf.io.read_file(TRAINING_IMAGE_PATH + fname)
+    img = tf.io.read_file(fname)
     img = tf.image.decode_jpeg(img, channels=3)
     # img = (tf.cast(img, tf.float32)/127.5) - 1
     img = tf.image.resize(img, [IMAGE_SIZE, IMAGE_SIZE])
@@ -42,7 +42,7 @@ def save_image(n, img):
         output_file.write(resized_encoded_image.numpy())
 
 def show_image(image):
-    plt.subplot(2, 2, n + 1)
+    plt.subplot(2, 2, 1)
     plt.imshow(image)
     plt.grid(False)
     plt.xticks([])
@@ -55,9 +55,9 @@ def debug_images(image_dataset):
     print('======= DUMPING IMAGE DATASET INFO =======')
     
     print(image_dataset)
-    for n, i in enumerate(image_ds.take(num_debug_images)):
-        save_image(n, i)
-        # show_image(i)
+    for n, i in enumerate(image_dataset.take(num_debug_images)):
+        # save_image(n, i)
+        show_image(i)
     
     print('======= END OF DUMPING IMAGE DATASET INFO =======')
 
@@ -65,7 +65,13 @@ def debug_images(image_dataset):
 def change_range(image, label):
     return 2 * image - 1, label
 
-path_ds = tf.data.Dataset.from_tensor_slices(filenames)
+training_filenames = tf.io.gfile.listdir(TRAINING_IMAGE_PATH)
+training_filenames.sort()
+training_filenames = list(map(prepend_local_path(TRAINING_IMAGE_PATH), training_filenames))
+
+print(training_filenames)
+
+path_ds = tf.data.Dataset.from_tensor_slices(training_filenames)
 image_ds = path_ds.map(preprocess)
 label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(image_labels, tf.int64))
 image_label_ds = tf.data.Dataset.zip((image_ds, label_ds))
@@ -91,12 +97,32 @@ image_batch, label_batch = next(iter(keras_ds))
 model = tf.keras.Sequential([
     mobile_net,
     tf.keras.layers.GlobalAveragePooling2D(),
-    tf.keras.layers.Dense(len(image_labels))])
+    tf.keras.layers.Dense(len(label_mappings))])
 
-model.compile(optimizer=tf.train.AdamOptimizer(),
+model.compile(optimizer=tf.compat.v1.train.AdamOptimizer(),
               loss=tf.keras.losses.sparse_categorical_crossentropy,
               metrics=["accuracy"])
 
 model.summary()
 
 model.fit(ds, epochs=3, steps_per_epoch=3)
+
+testing_filenames = tf.io.gfile.listdir(TESTING_IMAGE_PATH)
+testing_filenames.sort()
+testing_filenames = list(map(prepend_local_path(TESTING_IMAGE_PATH), testing_filenames))
+
+print(testing_filenames)
+
+test_path_ds = tf.data.Dataset.from_tensor_slices(testing_filenames)
+test_image_ds = test_path_ds.map(preprocess)
+
+test_ds = test_image_ds.batch(len(testing_filenames))
+test_ds = test_ds.prefetch(buffer_size=len(testing_filenames))
+print(test_ds)
+
+predictions = model.predict(test_ds)
+
+for predict in predictions:
+    print(predict)
+    guess = np.argmax(predict)
+    print('Predicting: ' + str(predict[guess]) + ', for ' + label_mappings[guess])
