@@ -4,8 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "npm run test"
+    "clean": "rm -rf dist/",
+    "build": "npm run clean && tsc",
+    "test": "npm run test",
+    "start": "node dist/src/app.js"
   },
   "author": "christian",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^3.5.3"
+  }
 }

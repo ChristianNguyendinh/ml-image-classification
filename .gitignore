@@ -3,3 +3,7 @@
 venv/
 
 *.h5
+
+package-lock.json
+node_modules/
+dist/
