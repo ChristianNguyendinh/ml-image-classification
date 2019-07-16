@@ -5,13 +5,20 @@
   "main": "app.js",
   "scripts": {
     "clean": "rm -rf dist/",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc && npm run copy",
+    "copy": "cp -r src/views dist/src/",
     "test": "npm run test",
-    "start": "node dist/src/app.js"
+    "start": "node dist/src/app.js",
+    "build:start": "npm run build && npm run start"
   },
   "author": "christian",
   "license": "ISC",
   "dependencies": {
+    "@types/koa": "^2.0.49",
+    "@types/koa-router": "^7.0.42",
+    "koa": "^2.7.0",
+    "koa-ejs": "^4.2.0",
+    "koa-router": "^7.4.0",
     "typescript": "^3.5.3"
   }
 }
