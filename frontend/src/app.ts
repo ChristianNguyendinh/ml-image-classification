@@ -6,6 +6,25 @@ import serve from 'koa-static'
 const app = new Koa();
 const router = new KoaRouter();
 
+const placeholderModels: any = {
+    '1': {
+        name: 'Twice Top 3 Model',
+        description: 'Sana, Mina, Nayeon recognition model',
+        dateCreated: '2019-05-14 12:14:16 EST',
+        lastModified: '2019-07-17 15:30:30 EST',
+        numImages: '9',
+        accuracy: '0.63'
+    },
+    '2': {
+        name: 'Random Model',
+        description: 'Some random palceholder model',
+        dateCreated: '2000-02-02 10:30:00 EST',
+        lastModified: '2019-07-16 12:00:30 EST',
+        numImages: '191',
+        accuracy: '0.94'
+    }
+}
+
 app.use(serve(`${__dirname}/static`));
 
 render(app, {
@@ -24,12 +43,17 @@ app.use(async (ctx, next) => {
     }
 });
 
-router.get('/', async (ctx, next) => {
+router.get('/model/list', async (ctx, next) => {
     await ctx.render('model-list', {
-        models: [
-            { name: 'Twice Top 3 Model', description: 'Sana, Mina, Nayeon recognition model', dateCreated: '2019-05-14 12:14:16 EST' },
-            { name: 'Random Model', description: 'Some random palceholder model', dateCreated: '2000-02-02 10:30:00 EST' }
-        ]
+        models: Object.values(placeholderModels)
+    });
+});
+
+router.get('/model/:modelId/details', async (ctx, next) => {
+    let modelId: string = ctx.params.modelId;
+    console.log(modelId);
+    await ctx.render('model-details', {
+        model: placeholderModels[modelId]
     });
 });
 
