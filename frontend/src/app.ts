@@ -13,7 +13,18 @@ const placeholderModels: any = {
         dateCreated: '2019-05-14 12:14:16 EST',
         lastModified: '2019-07-17 15:30:30 EST',
         numImages: '9',
-        accuracy: '0.63'
+        accuracy: '0.63',
+        images: [
+            { path: '/img/sana_1.jpg', name: 'sana', description: 'desc' },
+            { path: '/img/sana_2.jpg', name: 'sana', description: 'desc' },
+            { path: '/img/sana_3.jpg', name: 'sana', description: 'desc' },
+            { path: '/img/mina_1.jpg', name: 'mina', description: 'desc' },
+            { path: '/img/mina_2.jpg', name: 'mina', description: 'desc' },
+            { path: '/img/mina_3.jpg', name: 'mina', description: 'desc' },
+            { path: '/img/nayeon_1.jpg', name: 'nayeon', description: 'desc' },
+            { path: '/img/nayeon_2.jpg', name: 'nayeon', description: 'desc' },
+            { path: '/img/nayeon_3.jpg', name: 'nayeon', description: 'desc' },
+        ]
     },
     '2': {
         name: 'Random Model',
@@ -57,19 +68,15 @@ router.get('/model/:modelId/details', async (ctx, next) => {
     });
 });
 
-router.get('/images', async (ctx, next) => {
-    await ctx.render('images', {
-        images: [ 
-            { path: '/img/sana_1.jpg', name: 'sana', description: 'desc' },
-            { path: '/img/sana_2.jpg', name: 'sana', description: 'desc' },
-            { path: '/img/sana_3.jpg', name: 'sana', description: 'desc' },
-            { path: '/img/mina_1.jpg', name: 'mina', description: 'desc' },
-            { path: '/img/mina_2.jpg', name: 'mina', description: 'desc' },
-            { path: '/img/mina_3.jpg', name: 'mina', description: 'desc' },
-            { path: '/img/nayeon_1.jpg', name: 'nayeon', description: 'desc' },
-            { path: '/img/nayeon_2.jpg', name: 'nayeon', description: 'desc' },
-            { path: '/img/nayeon_3.jpg', name: 'nayeon', description: 'desc' },
-        ]
+router.get('/model/:modelId/images', async (ctx, next) => {
+    await ctx.render('model-images', {
+        images: placeholderModels[ctx.params.modelId].images
+    });
+});
+
+router.get('/model/:modelId/train', async (ctx, next) => {
+    await ctx.render('model-train', {
+        model: placeholderModels[ctx.params.modelId]
     });
 });
 
