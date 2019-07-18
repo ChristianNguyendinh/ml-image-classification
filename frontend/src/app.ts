@@ -25,8 +25,11 @@ app.use(async (ctx, next) => {
 });
 
 router.get('/', async (ctx, next) => {
-    await ctx.render('main', {
-        testAttr: 'Saito Asuka'
+    await ctx.render('model-list', {
+        models: [
+            { name: 'Twice Top 3 Model', description: 'Sana, Mina, Nayeon recognition model', dateCreated: '2019-05-14 12:14:16 EST' },
+            { name: 'Random Model', description: 'Some random palceholder model', dateCreated: '2000-02-02 10:30:00 EST' }
+        ]
     });
 });
 
