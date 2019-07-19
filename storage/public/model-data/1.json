@@ -7,47 +7,47 @@
     "accuracy": "0.63",
     "images": [
         {
-            "path": "/img/sana_1.jpg",
+            "path": "sana_1.jpg",
             "name": "sana",
             "description": "desc"
         },
         {
-            "path": "/img/sana_2.jpg",
+            "path": "sana_2.jpg",
             "name": "sana",
             "description": "desc"
         },
         {
-            "path": "/img/sana_3.jpg",
+            "path": "sana_3.jpg",
             "name": "sana",
             "description": "desc"
         },
         {
-            "path": "/img/mina_1.jpg",
+            "path": "mina_1.jpg",
             "name": "mina",
             "description": "desc"
         },
         {
-            "path": "/img/mina_2.jpg",
+            "path": "mina_2.jpg",
             "name": "mina",
             "description": "desc"
         },
         {
-            "path": "/img/mina_3.jpg",
+            "path": "mina_3.jpg",
             "name": "mina",
             "description": "desc"
         },
         {
-            "path": "/img/nayeon_1.jpg",
+            "path": "nayeon_1.jpg",
             "name": "nayeon",
             "description": "desc"
         },
         {
-            "path": "/img/nayeon_2.jpg",
+            "path": "nayeon_2.jpg",
             "name": "nayeon",
             "description": "desc"
         },
         {
-            "path": "/img/nayeon_3.jpg",
+            "path": "nayeon_3.jpg",
             "name": "nayeon",
             "description": "desc"
         }
