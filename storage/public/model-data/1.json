@@ -1,0 +1,55 @@
+{
+    "name": "Twice Top 3 Model",
+    "description": "Sana, Mina, Nayeon recognition model",
+    "dateCreated": "2019-05-14 12: 14: 16 EST",
+    "lastModified": "2019-07-17 15: 30: 30 EST",
+    "numImages": "9",
+    "accuracy": "0.63",
+    "images": [
+        {
+            "path": "/img/sana_1.jpg",
+            "name": "sana",
+            "description": "desc"
+        },
+        {
+            "path": "/img/sana_2.jpg",
+            "name": "sana",
+            "description": "desc"
+        },
+        {
+            "path": "/img/sana_3.jpg",
+            "name": "sana",
+            "description": "desc"
+        },
+        {
+            "path": "/img/mina_1.jpg",
+            "name": "mina",
+            "description": "desc"
+        },
+        {
+            "path": "/img/mina_2.jpg",
+            "name": "mina",
+            "description": "desc"
+        },
+        {
+            "path": "/img/mina_3.jpg",
+            "name": "mina",
+            "description": "desc"
+        },
+        {
+            "path": "/img/nayeon_1.jpg",
+            "name": "nayeon",
+            "description": "desc"
+        },
+        {
+            "path": "/img/nayeon_2.jpg",
+            "name": "nayeon",
+            "description": "desc"
+        },
+        {
+            "path": "/img/nayeon_3.jpg",
+            "name": "nayeon",
+            "description": "desc"
+        }
+    ]
+}
