@@ -1,6 +1,6 @@
 import { Context } from 'koa';
 import joiRouter from 'koa-joi-router';
-import getModelData from '../../services/getModelData';
+import { getModelData } from '../../services/getModelData';
 
 const Joi = joiRouter.Joi;
 const routes = joiRouter();
