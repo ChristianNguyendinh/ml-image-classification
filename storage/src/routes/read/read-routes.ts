@@ -18,7 +18,12 @@ routes.route({
     },
     handler: async (ctx: Context) => {
         const id = ctx.request.body.id;
-        ctx.response.body = await getModelData(id);
+        try {
+            ctx.response.body = await getModelData(id);
+        } catch(err) {
+            ctx.response.status = 400;
+            ctx.response.body = { error: 'Bad ID Provided' };
+        }
     }
 });
 

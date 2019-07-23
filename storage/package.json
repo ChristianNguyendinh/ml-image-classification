@@ -6,9 +6,11 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "npm run clean && tsc",
-    "test": "npm run test",
     "start": "node dist/src/app.js",
-    "build:start": "npm run build && npm run start"
+    "build:start": "npm run build && npm run start",
+    "test": "npm run test:unit",
+    "test:unit": "mocha dist/test/common.js 'dist/test/unit/**/*.js'",
+    "build:test": "npm run build && npm run test"
   },
   "author": "",
   "license": "ISC",
@@ -22,5 +24,15 @@
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "typescript": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/sinon": "^7.0.13",
+    "@types/supertest": "^2.0.8",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
+    "sinon": "^7.3.2",
+    "supertest": "^4.0.2"
   }
 }
