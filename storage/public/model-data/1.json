@@ -1,8 +1,8 @@
 {
     "name": "Twice Top 3 Model",
     "description": "Sana, Mina, Nayeon recognition model",
-    "dateCreated": "2019-05-14 12: 14: 16 EST",
-    "lastModified": "2019-07-17 15: 30: 30 EST",
+    "dateCreated": "2019-08-01T18:26:30.752Z",
+    "lastModified": "2019-08-01T21:26:30.752Z",
     "numImages": "9",
     "accuracy": "0.63",
     "images": [

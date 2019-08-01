@@ -1,7 +1,7 @@
 import fs from 'fs';
 import util from 'util';
 
-const modelDataDir = `${__dirname}/../../../public/model-data`;
+const MODEL_DATA_DIR = `${__dirname}/../../../public/model-data`;
 const readFile = util.promisify(fs.readFile);
 
 function formatImagePaths(id: number, imagesArr: ImagesContainer) {
@@ -12,8 +12,8 @@ function formatImagePaths(id: number, imagesArr: ImagesContainer) {
 }
 
 export async function getModelData(id: number) {
-    let rawModelData = await readFile(`${modelDataDir}/${id}.json`);
+    let rawModelData = await readFile(`${MODEL_DATA_DIR}/${id}.json`);
     let modelData: Model = JSON.parse(rawModelData.toString());
-    modelData.images = formatImagePaths(id, modelData.images);
+    modelData.images = modelData.images ? formatImagePaths(id, modelData.images) : [];
     return modelData;
 };

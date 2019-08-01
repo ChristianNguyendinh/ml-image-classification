@@ -21,6 +21,7 @@ routes.route({
         try {
             ctx.response.body = await getModelData(id);
         } catch(err) {
+            console.log(err);
             ctx.response.status = 400;
             ctx.response.body = { error: 'Bad ID Provided' };
         }

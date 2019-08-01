@@ -13,5 +13,5 @@ declare interface Model {
     lastModified: string,
     numImages: string,
     accuracy: string,
-    images: ImagesContainer
+    images?: ImagesContainer
 }
