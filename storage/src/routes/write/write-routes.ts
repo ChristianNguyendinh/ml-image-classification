@@ -30,4 +30,11 @@ routes.route({
     }
 });
 
+// TODO: add image route
+// - need name, desc, and image file... actually, how do i do that? uploading images
+// - verify ID exists already
+// - new folder if not already exists
+// - save image
+// - save name to images array in file, new array if not already exists
+
 export default routes.middleware();

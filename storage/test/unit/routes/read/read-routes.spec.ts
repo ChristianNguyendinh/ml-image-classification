@@ -1,5 +1,5 @@
-import * as getModelDataDependency from '../../../src/services/getModelData';
-import readRoutes from '../../../src/routes/read/read-routes';
+import * as getModelDataDependency from '../../../../src/services/getModelData';
+import readRoutes from '../../../../src/routes/read/read-routes';
 import Koa from 'koa';
 import supertest from 'supertest';
 import sinon from 'sinon';
@@ -9,8 +9,7 @@ describe('/model/read - Reading Data Routes', () => {
     describe('/data - POST', () => {
         let server: Server
         let request: supertest.SuperTest<supertest.Test>;
-        // TODO: appropriate type
-        let getModelDataStub;
+        let getModelDataStub: sinon.SinonStub<[number], Promise<Model>>;
 
         const validId = 3;
         const invalidId = 5;
