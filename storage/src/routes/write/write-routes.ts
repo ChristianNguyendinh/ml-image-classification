@@ -1,9 +1,13 @@
 import { Context } from 'koa';
 import joiRouter from 'koa-joi-router'; 
+import { checkIfModelExists } from '../../services/getModelData'
 import { generateId, saveModelData } from '../../services/saveModelData';
+import { removeTempFile, saveImageToModel, getModelImageURLPath } from '../../services/imageUtil'
+import multer from 'koa-multer';
 
 const Joi = joiRouter.Joi;
 const routes = joiRouter();
+const upload = multer({ dest: `${__dirname}/../../../../public/images/training/temp` })
 
 const newModelSchema = {
     data: Joi.object().keys({
@@ -30,11 +34,49 @@ routes.route({
     }
 });
 
-// TODO: add image route
-// - need name, desc, and image file... actually, how do i do that? uploading images
-// - verify ID exists already
-// - new folder if not already exists
-// - save image
-// - save name to images array in file, new array if not already exists
+const imageRouteHander = async (ctx: any) => {
+    console.log(ctx.request);
+    console.log(ctx.req.files);
+
+    let imageInfo = ctx.req.files.pic[0];
+    if (imageInfo.mimetype != 'image/jpeg') {
+        removeTempFile(imageInfo.filename);
+        ctx.response.status = 400;
+        ctx.response.body = { success: false, error: 'only accepted image type is JPEG' };
+    } else if (!ctx.params.id || !checkIfModelExists(ctx.params.id)) {
+        removeTempFile(imageInfo.filename);
+        ctx.response.status = 400;
+        ctx.response.body = { success: false, error: 'bad ID provided' };
+    } else {
+        saveImageToModel(imageInfo.filename, ctx.params.id);
+        ctx.response.body = {
+            success: true,
+            path: `${getModelImageURLPath(ctx.params.id)}/${imageInfo.filename}.jpg`
+        };
+    }
+};
+
+const handleImageUploadError = async (ctx: any, next: any) => {
+    try {
+        await next();
+    } catch(err) {
+        console.log(err);
+        ctx.response.status = 400;
+        ctx.response.body = { success: false, error: 'bad image uploaded' };
+    }
+}
+
+const imageUploadHeaderSchema = Joi.object({
+    'content-type': Joi.string().regex(/^multipart\/form-data.*$/).required()
+}).unknown();
+
+routes.route({
+    method: 'post',
+    path: '/:id/image',
+    validate: {
+        header: imageUploadHeaderSchema,
+    },
+    handler: [ handleImageUploadError, upload.fields([{ name: 'pic' }]), imageRouteHander]
+});
 
 export default routes.middleware();
