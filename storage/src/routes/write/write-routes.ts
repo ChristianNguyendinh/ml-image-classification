@@ -6,7 +6,7 @@ import { removeTempFile, saveImageToModel, getModelImageURLPath } from '../../se
 import multer from 'koa-multer';
 
 const Joi = joiRouter.Joi;
-const routes = joiRouter();
+const routes: any = joiRouter();
 const upload = multer({ dest: `${__dirname}/../../../../public/images/training/temp` })
 
 const newModelSchema = {
@@ -42,7 +42,7 @@ const imageRouteHander = async (ctx: any) => {
     if (imageInfo.mimetype != 'image/jpeg') {
         removeTempFile(imageInfo.filename);
         ctx.response.status = 400;
-        ctx.response.body = { success: false, error: 'only accepted image type is JPEG' };
+        ctx.response.body = { success: false, error: 'only accepted file type is JPEG' };
     } else if (!ctx.params.id || !checkIfModelExists(ctx.params.id)) {
         removeTempFile(imageInfo.filename);
         ctx.response.status = 400;
@@ -58,6 +58,7 @@ const imageRouteHander = async (ctx: any) => {
 
 const handleImageUploadError = async (ctx: any, next: any) => {
     try {
+        console.log(upload);
         await next();
     } catch(err) {
         console.log(err);

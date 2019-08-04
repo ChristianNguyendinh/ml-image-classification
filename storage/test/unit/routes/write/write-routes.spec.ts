@@ -1,14 +1,18 @@
 import * as saveModelDataDependency from '../../../../src/services/saveModelData';
+import * as imageUtilDependency from '../../../../src/services/imageUtil';
 import writeRoutes from '../../../../src/routes/write/write-routes';
+import koaMulter from 'koa-multer';
+import proxyquire from 'proxyquire';
 import Koa from 'koa';
 import supertest from 'supertest';
 import sinon from 'sinon';
 import { Server } from 'http';
 
 describe('/model/write - Reading Data Routes', () => {
+    let server: Server
+    let request: supertest.SuperTest<supertest.Test>;
+
     describe('/new - POST', () => {
-        let server: Server
-        let request: supertest.SuperTest<supertest.Test>;
         let saveModelDataStub: sinon.SinonStub<[number, Model], void>;
         let generateIdStub: sinon.SinonStub<[], number>;
 
@@ -92,6 +96,46 @@ describe('/model/write - Reading Data Routes', () => {
                 .expect(200);
             
             res.body.should.deep.equal({ id: TEST_ID });
+        });
+    });
+
+    describe('/:id/image - POST', () => {
+        let koaMulterStub;
+        let koaMulterFilterStub;
+        let stubbedWriteRoutes;
+
+        beforeEach(() => {
+            koaMulterStub = sinon.stub();
+            koaMulterStub.returns({
+                fields: () => {
+                    return (async (ctx: any, next: any) => {
+                        await next();
+                    });
+                }
+            });
+
+            stubbedWriteRoutes = proxyquire('../../../../src/routes/write/write-routes', {
+                'koa-multer': koaMulterStub
+            });
+            
+            const app = new Koa();
+            app.use(stubbedWriteRoutes.default);
+
+            server = app.listen();
+            request = supertest(server);
+        });
+
+        it('should asdf', async () => {
+            const res = await request
+                .post('/1/image')
+                .set('content-type', 'multipart/form-data')
+                .send()
+                .expect(400);
+        });
+
+        afterEach(() => {
+            server.close();
+            sinon.restore();
         });
     });
 });
