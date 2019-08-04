@@ -35,15 +35,12 @@ routes.route({
 });
 
 const imageRouteHander = async (ctx: any) => {
-    console.log(ctx.request);
-    console.log(ctx.req.files);
-
     let imageInfo = ctx.req.files.pic[0];
     if (imageInfo.mimetype != 'image/jpeg') {
         removeTempFile(imageInfo.filename);
         ctx.response.status = 400;
         ctx.response.body = { success: false, error: 'only accepted file type is JPEG' };
-    } else if (!ctx.params.id || !checkIfModelExists(ctx.params.id)) {
+    } else if (!ctx.params.id || !checkIfModelExists(parseInt(ctx.params.id))) {
         removeTempFile(imageInfo.filename);
         ctx.response.status = 400;
         ctx.response.body = { success: false, error: 'bad ID provided' };
@@ -58,7 +55,6 @@ const imageRouteHander = async (ctx: any) => {
 
 const handleImageUploadError = async (ctx: any, next: any) => {
     try {
-        console.log(upload);
         await next();
     } catch(err) {
         console.log(err);

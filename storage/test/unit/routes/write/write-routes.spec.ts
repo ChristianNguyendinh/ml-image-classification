@@ -1,7 +1,7 @@
 import * as saveModelDataDependency from '../../../../src/services/saveModelData';
+import * as getModelDataDependency from '../../../../src/services/getModelData';
 import * as imageUtilDependency from '../../../../src/services/imageUtil';
 import writeRoutes from '../../../../src/routes/write/write-routes';
-import koaMulter from 'koa-multer';
 import proxyquire from 'proxyquire';
 import Koa from 'koa';
 import supertest from 'supertest';
@@ -100,15 +100,44 @@ describe('/model/write - Reading Data Routes', () => {
     });
 
     describe('/:id/image - POST', () => {
-        let koaMulterStub;
-        let koaMulterFilterStub;
+        const HTTP_MIMETYPES = {
+            imageJpg: 'image/jpeg',
+            imagePng: 'image/png',
+            multipartFormData: 'multipart/form-data',
+            textHtml: 'text/html'
+        }
+        const TEST_FILENAME = 'testFile';
+        const VALID_ID = 101;
+        const INVALID_ID = 100;
+
+        let checkIfModelExistsStub: sinon.SinonStub<[number], boolean>;;
+        let removeTempFileStub: sinon.SinonStub<[string], void>;;
+        let saveImageToModelStub: sinon.SinonStub<[string, number], string>;;
+        let koaMulterStub: sinon.SinonStub<[any], any>;
         let stubbedWriteRoutes;
+        let testFileContext = {};
+
+        function setTestFileContext(mimetype: string) {
+            testFileContext = { pic: [{ TEST_FILENAME, mimetype }] };
+        }
+
+        function resetTestFileContext() {
+            testFileContext = {};
+        }
 
         beforeEach(() => {
+            checkIfModelExistsStub = sinon.stub(getModelDataDependency, 'checkIfModelExists');
+            checkIfModelExistsStub.withArgs(VALID_ID).returns(true);
+            checkIfModelExistsStub.withArgs(INVALID_ID).returns(false);
+
+            removeTempFileStub = sinon.stub(imageUtilDependency, 'removeTempFile');
+            saveImageToModelStub = sinon.stub(imageUtilDependency, 'saveImageToModel');
+
             koaMulterStub = sinon.stub();
             koaMulterStub.returns({
                 fields: () => {
                     return (async (ctx: any, next: any) => {
+                        ctx.req.files = testFileContext;
                         await next();
                     });
                 }
@@ -125,17 +154,56 @@ describe('/model/write - Reading Data Routes', () => {
             request = supertest(server);
         });
 
-        it('should asdf', async () => {
-            const res = await request
-                .post('/1/image')
-                .set('content-type', 'multipart/form-data')
+        it('should 400 given an improper header content-type', async () => {
+            setTestFileContext(HTTP_MIMETYPES.imageJpg);
+            await request
+                .post(`/${VALID_ID}/image`)
+                .set('content-type', HTTP_MIMETYPES.textHtml)
                 .send()
                 .expect(400);
+        });
+
+        it('should 400 given an improper mimetype', async () => {
+            setTestFileContext(HTTP_MIMETYPES.imagePng);
+            await request
+                .post(`/${VALID_ID}/image`)
+                .set('content-type', HTTP_MIMETYPES.multipartFormData)
+                .send()
+                .expect(400);
+
+            removeTempFileStub.callCount.should.equal(1);
+            saveImageToModelStub.callCount.should.equal(0);
+        });
+
+        it('should 400 given an improper ID', async () => {
+            setTestFileContext(HTTP_MIMETYPES.imageJpg);
+            await request
+                .post(`/${INVALID_ID}/image`)
+                .set('content-type', HTTP_MIMETYPES.multipartFormData)
+                .send()
+                .expect(400);
+
+            removeTempFileStub.callCount.should.equal(1);
+            saveImageToModelStub.callCount.should.equal(0);
+        });
+
+        it('should succeed when given proper input', async () => {
+            setTestFileContext(HTTP_MIMETYPES.imageJpg);
+            const res = await request
+                .post(`/${VALID_ID}/image`)
+                .set('content-type', HTTP_MIMETYPES.multipartFormData)
+                .send()
+                .expect(200);
+
+            res.body.should.have.property('success', true);
+            removeTempFileStub.callCount.should.equal(0);
+            saveImageToModelStub.callCount.should.equal(1);
         });
 
         afterEach(() => {
             server.close();
             sinon.restore();
+            resetTestFileContext();
         });
     });
 });
