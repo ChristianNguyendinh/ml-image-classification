@@ -34,6 +34,7 @@ routes.route({
     }
 });
 
+// TODO: update the model data JSON file
 const imageRouteHander = async (ctx: any) => {
     let imageInfo = ctx.req.files.pic[0];
     if (imageInfo.mimetype != 'image/jpeg') {

@@ -2,6 +2,7 @@ import fs from 'fs';
 import util from 'util';
 import path from 'path';
 
+const STORAGE_URL = 'http://127.0.0.1:3001';
 const MODEL_DATA_DIR = `${__dirname}/../../../public/model-data`;
 const readFile = util.promisify(fs.readFile);
 
@@ -11,7 +12,7 @@ export function checkIfModelExists(id: number) {
 
 function formatImagePaths(id: number, imagesArr: ImagesContainer) {
     for (let image of imagesArr) {
-        image.path = `/images/training/${id}/${image.path}`;
+        image.path = `${STORAGE_URL}/images/training/${id}/${image.path}`;
     }
     return imagesArr;
 }
