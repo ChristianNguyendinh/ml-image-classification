@@ -22,7 +22,7 @@
 
         <% if (typeof models != 'undefined') { %>
             <% models.forEach(function(model) { %>
-                <div class="model-info-container">
+                <div class="model-info-container" onclick="location.href='/model/<%= model.id %>/details'">
                     <b><%= model.name %></b>
                     <p><%= model.description %></p>
                     <i><%= model.dateCreated %></i>

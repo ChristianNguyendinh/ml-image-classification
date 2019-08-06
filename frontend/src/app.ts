@@ -45,6 +45,7 @@ router.get('/model/:modelId/images', async (ctx, next) => {
     });
 });
 
+// TODO: actually train
 router.get('/model/:modelId/train', async (ctx, next) => {
     const modelId: number = parseInt(ctx.params.modelId);
     await ctx.render('model-train', {

@@ -14,7 +14,9 @@ export async function getListModels() {
 
 export async function getModelData(id: number) {
     const requestBody = { id };
-    return await sendStoragePOSTRequest(GET_FULL_MODEL_DATA_URL, requestBody);
+    const modelData = await sendStoragePOSTRequest(GET_FULL_MODEL_DATA_URL, requestBody);
+    modelData.id = id;
+    return modelData;
 }
 
 export async function getModelImages(id: number) {

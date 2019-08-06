@@ -58,10 +58,10 @@
         </div>
 
         <div id="button-container">
-            <button>View Training Images</button>
+            <button onclick="location.href='/model/<%= model.id %>/images'">View Training Images</button>
         </div>
         <div id="button-container">
-            <button>Test/Train New Image</button>
+            <button onclick="location.href='/model/<%= model.id %>/train'">Test/Train New Image</button>
         </div>
     </div>
 </body>

@@ -1,1 +1,1 @@
-{"name":"My Test thing","description":"just a test","dateCreated":"2019-08-01T12:26:30.752Z","lastModified":"2019-08-01T15:26:30.752Z","numImages":"5","accuracy":"0.69"}
+{"name":"My Test thing","description":"just a test","dateCreated":"2019-08-01T12:26:30.752Z","lastModified":"2019-08-01T15:26:30.752Z","numImages":"1","accuracy":"0.69","images": [{"path": "18cb286eb0c96cf6faa97aa2b1b47590.jpg","name": "floorplan","description": "my desc"}]}
