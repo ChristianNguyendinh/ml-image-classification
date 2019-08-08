@@ -1,0 +1,16 @@
+version: "3"
+services:
+  frontend_app:
+    image: frontend_app
+    ports:
+      - "4000:3000"
+    networks:
+      - webnet
+  storage_app:
+    image: storage_app
+    ports:
+      - "4001:3001"
+    networks:
+      - webnet
+networks:
+  webnet:

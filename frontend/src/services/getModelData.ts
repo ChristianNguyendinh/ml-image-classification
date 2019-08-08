@@ -1,9 +1,9 @@
 import request from 'request-promise-native';
 
-const STORAGE_BASE_URL = 'http://127.0.0.1:3001';
+const STORAGE_BASE_URL = 'http://storage_app:3001';
 const GET_FULL_MODEL_DATA_URL = `${STORAGE_BASE_URL}/model/read/data`;
 const GET_MODEL_IMAGES_URL = `${STORAGE_BASE_URL}/model/read/images`;
-
+const EXPOSED_STORAGE_URL = 'http://127.0.0.1:4001';
 
 // TODO: update with new api route after adding to storage
 export async function getListModels() {
@@ -17,6 +17,14 @@ export async function getModelData(id: number) {
     const modelData = await sendStoragePOSTRequest(GET_FULL_MODEL_DATA_URL, requestBody);
     modelData.id = id;
     return modelData;
+}
+
+export async function getFormattedURLModelImages(id: number) {
+    const modelImages = await getModelImages(id);
+    for (let image of modelImages) {
+        image.path = `${EXPOSED_STORAGE_URL}${image.path}`;
+    }
+    return modelImages;
 }
 
 export async function getModelImages(id: number) {

@@ -2,7 +2,7 @@ import Koa from 'koa';
 import KoaRouter from 'koa-router'
 import render from 'koa-ejs';
 import serve from 'koa-static'
-import { getListModels, getModelData, getModelImages } from './services/getModelData';
+import { getListModels, getModelData, getFormattedURLModelImages } from './services/getModelData';
 
 const app = new Koa();
 const router = new KoaRouter();
@@ -41,7 +41,7 @@ router.get('/model/:modelId/details', async (ctx, next) => {
 router.get('/model/:modelId/images', async (ctx, next) => {
     const modelId: number = parseInt(ctx.params.modelId);
     await ctx.render('model-images', {
-        images: await getModelImages(modelId)
+        images: await getFormattedURLModelImages(modelId)
     });
 });
 
