@@ -10,7 +10,9 @@
     "build:start": "npm run build && npm run start",
     "test": "npm run test:unit",
     "test:unit": "mocha dist/test/common.js 'dist/test/unit/**/*.js'",
-    "build:test": "npm run build && npm run test"
+    "build:test": "npm run build && npm run test",
+    "docker:build": "npm run build && docker build --tag=storage_app .",
+    "docker:run": "docker run storage_app"
   },
   "author": "",
   "license": "ISC",
