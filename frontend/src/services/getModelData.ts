@@ -1,9 +1,5 @@
 import request from 'request-promise-native';
-
-const STORAGE_BASE_URL = 'http://storage_app:3001';
-const GET_FULL_MODEL_DATA_URL = `${STORAGE_BASE_URL}/model/read/data`;
-const GET_MODEL_IMAGES_URL = `${STORAGE_BASE_URL}/model/read/images`;
-const EXPOSED_STORAGE_URL = 'http://127.0.0.1:4001';
+import { EXPOSED_STORAGE_URL, GET_FULL_MODEL_DATA_URL, GET_MODEL_IMAGES_URL } from '../constants';
 
 // TODO: update with new api route after adding to storage
 export async function getListModels() {
