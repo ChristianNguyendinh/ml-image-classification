@@ -5,49 +5,45 @@ import { getModelData } from '../../services/getModelData';
 const Joi = joiRouter.Joi;
 const routes = joiRouter();
 
-const readSchema = {
+const idParamSchema = Joi.object().keys({
     id: Joi.number().min(0).required()
-};
+});
 
-// these should really just have a url parameter and be a GET...
 routes.route({
-    method: 'post',
-    path: '/data',
+    method: 'get',
+    path: '/:id/data',
     validate: {
-        body: readSchema,
-        type: 'json'
+        params: idParamSchema
     },
     handler: async (ctx: Context) => {
-        const id = ctx.request.body.id;
         try {
-            ctx.response.body = await getModelData(id);
+            ctx.response.body = await getModelData(ctx.params.id);
         } catch(err) {
-            console.log(err);
-            ctx.response.status = 400;
-            ctx.response.body = { error: 'Bad ID Provided' };
+            handleGetModelDataError(ctx, err);
         }
     }
 });
 
-// TODO: test
 routes.route({
-    method: 'post',
-    path: '/images',
+    method: 'get',
+    path: '/:id/images',
     validate: {
-        body: readSchema,
-        type: 'json'
+        params: idParamSchema,
     },
     handler: async (ctx: Context) => {
-        const id = ctx.request.body.id;
         try {
-            const modelData = await getModelData(id);
+            const modelData = await getModelData(ctx.params.id);
             ctx.response.body = modelData.images;
         } catch (err) {
-            console.log(err);
-            ctx.response.status = 400;
-            ctx.response.body = { error: 'Bad ID Provided' };
+            handleGetModelDataError(ctx, err);
         }
     }
 });
+
+function handleGetModelDataError(ctx: Context, err: any) {
+    console.log(err);
+    ctx.response.status = 400;
+    ctx.response.body = { error: 'Bad ID Provided' };
+}
 
 export default routes.middleware();
